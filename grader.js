@@ -20,7 +20,8 @@ References:
    - https://developer.mozilla.org/en-US/docs/JSON
    - https://developer.mozilla.org/en-US/docs/JSON#JSON_in_Firefox_2
 */
-
+var sys = require('util');
+var rest = require('./restler');
 var fs = require('fs');
 var program = require('commander');
 var cheerio = require('cheerio');
@@ -65,7 +66,15 @@ if(require.main == module) {
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
+        .option('-u, --url <url_file>', 'URL')
         .parse(process.argv);
+       if (program.url){
+       rest.get(program.url).on('complete', function(result) {
+       fs.writeFilesync('tmp.html', result, function (err){
+       if (err) throw err;
+       });
+       });
+       program.file='tmp.html';}
     var checkJson = checkHtmlFile(program.file, program.checks);
     var outJson = JSON.stringify(checkJson, null, 4);
     console.log(outJson);
