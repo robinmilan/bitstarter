@@ -48,6 +48,7 @@ var asserturl = function(url){
       var checkJson = checkHtml(program.file, program.checks);
       var outJson = JSON.stringify(checkJson, null, 4);
       console.log(outJson);
+      fs.writeFile('tmp.txt',outJson);
       }
     });
 }
@@ -97,7 +98,9 @@ if(require.main == module) {
     if (! program.url){
     var checkJson = checkHtmlFile(program.file, program.checks);
     var outJson = JSON.stringify(checkJson, null, 4);
-    console.log(outJson);}
+    console.log(outJson);
+    fs.writeFile('tmp.txt',outJson);
+    }
 } else {
     exports.checkHtmlFile = checkHtmlFile;
 }
